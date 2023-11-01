@@ -3,7 +3,7 @@ package composition
 import (
 	"net/http"
 
-	"github.com/nguyennm96/swag/v2/testdata/nested/api"
+	"github.com/nguyennm96/swag-v2/v2/testdata/nested/api"
 )
 
 // @title Swagger Example API

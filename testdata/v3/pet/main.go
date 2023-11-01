@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/nguyennm96/swag/v2/testdata/v3/pet/web"
+	"github.com/nguyennm96/swag-v2/v2/testdata/v3/pet/web"
 )
 
 // @title Swagger Petstore

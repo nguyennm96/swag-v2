@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/nguyennm96/swag/v2/format"
-	"github.com/nguyennm96/swag/v2/gen"
+	"github.com/nguyennm96/swag-v2/v2/format"
+	"github.com/nguyennm96/swag-v2/v2/gen"
 
 	"github.com/urfave/cli/v2"
 )
