@@ -128,7 +128,7 @@ func (p *Parser) parseGeneralAPIInfoV3(comments []string) error {
 			}
 
 			tag.Spec.ExternalDocs.Spec.Description = value
-		case secBasicAttr, secAPIKeyAttr, secApplicationAttr, secImplicitAttr, secPasswordAttr, secAccessCodeAttr:
+		case secBasicAttr, secAPIKeyAttr, secApplicationAttr, secImplicitAttr, secPasswordAttr, secAccessCodeAttr, secHttpAttr:
 			key, scheme, err := parseSecAttributesV3(attribute, comments, &line)
 			if err != nil {
 				return err
