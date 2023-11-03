@@ -72,6 +72,8 @@ func New() *Gen {
 
 // Config presents Gen configurations.
 type Config struct {
+	EnableDebug bool
+
 	Debugger swag.Debugger
 
 	// SearchDir the swag would parse,comma separated if multiple
@@ -185,8 +187,6 @@ func (g *Gen) Build(config *Config) error {
 				return fmt.Errorf("could not open overrides file: %w", err)
 			}
 		} else {
-			g.debug.Printf("Using overrides from %s", config.OverridesFile)
-
 			overrides, err = parseOverrides(overridesFile)
 			if err != nil {
 				return err
@@ -195,7 +195,7 @@ func (g *Gen) Build(config *Config) error {
 	}
 
 	g.debug.Printf("Generate swagger docs....")
-
+	g.debug.Printf("From Daniel Nguyen with ❤️....")
 	p := swag.New(
 		swag.SetParseDependency(config.ParseDependency),
 		swag.SetMarkdownFileDirectory(config.MarkdownFilesDir),
@@ -288,7 +288,7 @@ func (g *Gen) writeDoc(config *Config, doc interface{}) error {
 			return err
 		}
 	}
-	g.debug.Printf("create docs.go at %+v", docFileName)
+	//g.debug.Printf("create docs.go at %+v", docFileName)
 
 	return nil
 }
@@ -312,7 +312,7 @@ func (g *Gen) writeJSON(config *Config, spec interface{}) error {
 		return err
 	}
 
-	g.debug.Printf("create swagger.json at %+v", jsonFileName)
+	//g.debug.Printf("create swagger.json at %+v", jsonFileName)
 
 	return nil
 }
@@ -341,7 +341,7 @@ func (g *Gen) writeYAML(config *Config, swagger interface{}) error {
 		return err
 	}
 
-	g.debug.Printf("create swagger.yaml at %+v", yamlFileName)
+	//g.debug.Printf("create swagger.yaml at %+v", yamlFileName)
 
 	return nil
 }

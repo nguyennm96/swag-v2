@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/nguyennm96/swag-v2/v2"
 	"io"
 	"log"
 	"os"
