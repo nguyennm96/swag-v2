@@ -5,9 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/swaggo/swag/example/celler/httputil"
-	"github.com/swaggo/swag/example/celler/model"
+	"github.com/nguyennm96/swag-v2/v2/example/celler/httputil"
+	"github.com/nguyennm96/swag-v2/v2/example/celler/model"
 )
 
 // ShowBottle godoc

@@ -2,44 +2,43 @@ package main
 
 import (
 	"fmt"
+	"github.com/nguyennm96/swag-v2/v2"
 	"io"
 	"log"
 	"os"
 	"strings"
 
-	"github.com/urfave/cli/v2"
+	"github.com/nguyennm96/swag-v2/v2/format"
+	"github.com/nguyennm96/swag-v2/v2/gen"
 
-	"github.com/swaggo/swag"
-	"github.com/swaggo/swag/format"
-	"github.com/swaggo/swag/gen"
+	"github.com/urfave/cli/v2"
 )
 
 const (
-	searchDirFlag            = "dir"
-	excludeFlag              = "exclude"
-	generalInfoFlag          = "generalInfo"
-	propertyStrategyFlag     = "propertyStrategy"
-	outputFlag               = "output"
-	outputTypesFlag          = "outputTypes"
-	parseVendorFlag          = "parseVendor"
-	parseDependencyFlag      = "parseDependency"
-	parseDependencyLevelFlag = "parseDependencyLevel"
-	markdownFilesFlag        = "markdownFiles"
-	codeExampleFilesFlag     = "codeExampleFiles"
-	parseInternalFlag        = "parseInternal"
-	generatedTimeFlag        = "generatedTime"
-	requiredByDefaultFlag    = "requiredByDefault"
-	parseDepthFlag           = "parseDepth"
-	instanceNameFlag         = "instanceName"
-	overridesFileFlag        = "overridesFile"
-	parseGoListFlag          = "parseGoList"
-	quietFlag                = "quiet"
-	tagsFlag                 = "tags"
-	parseExtensionFlag       = "parseExtension"
-	templateDelimsFlag       = "templateDelims"
-	packageName              = "packageName"
-	collectionFormatFlag     = "collectionFormat"
-	packagePrefixFlag        = "packagePrefix"
+	searchDirFlag         = "dir"
+	excludeFlag           = "exclude"
+	generalInfoFlag       = "generalInfo"
+	propertyStrategyFlag  = "propertyStrategy"
+	outputFlag            = "output"
+	outputTypesFlag       = "outputTypes"
+	parseVendorFlag       = "parseVendor"
+	parseDependencyFlag   = "parseDependency"
+	markdownFilesFlag     = "markdownFiles"
+	codeExampleFilesFlag  = "codeExampleFiles"
+	parseInternalFlag     = "parseInternal"
+	generatedTimeFlag     = "generatedTime"
+	requiredByDefaultFlag = "requiredByDefault"
+	parseDepthFlag        = "parseDepth"
+	instanceNameFlag      = "instanceName"
+	overridesFileFlag     = "overridesFile"
+	parseGoListFlag       = "parseGoList"
+	quietFlag             = "quiet"
+	tagsFlag              = "tags"
+	parseExtensionFlag    = "parseExtension"
+	templateDelimsFlag    = "templateDelims"
+	openAPIVersionFlag    = "v3.1"
+	packageName           = "packageName"
+	collectionFormatFlag  = "collectionFormat"
 )
 
 var initFlags = []cli.Flag{
@@ -85,11 +84,6 @@ var initFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:  parseVendorFlag,
 		Usage: "Parse go files in 'vendor' folder, disabled by default",
-	},
-	&cli.IntFlag{
-		Name:    parseDependencyLevelFlag,
-		Aliases: []string{"pdl"},
-		Usage:   "Parse go files inside dependency folder, 0 disabled, 1 only parse models, 2 only parse operations, 3 parse all",
 	},
 	&cli.BoolFlag{
 		Name:    parseDependencyFlag,
@@ -151,6 +145,11 @@ var initFlags = []cli.Flag{
 		Value:   "",
 		Usage:   "A comma-separated list of tags to filter the APIs for which the documentation is generated.Special case if the tag is prefixed with the '!' character then the APIs with that tag will be excluded",
 	},
+	&cli.BoolFlag{
+		Name:  openAPIVersionFlag,
+		Value: false,
+		Usage: "Generate OpenAPI V3.1 spec",
+	},
 	&cli.StringFlag{
 		Name:    templateDelimsFlag,
 		Aliases: []string{"td"},
@@ -167,11 +166,6 @@ var initFlags = []cli.Flag{
 		Aliases: []string{"cf"},
 		Value:   "csv",
 		Usage:   "Set default collection format",
-	},
-	&cli.StringFlag{
-		Name:  packagePrefixFlag,
-		Value: "",
-		Usage: "Parse only packages whose import path match the given prefix, comma separated",
 	},
 }
 
@@ -210,12 +204,6 @@ func initAction(ctx *cli.Context) error {
 		return fmt.Errorf("not supported %s collectionFormat", ctx.String(collectionFormat))
 	}
 
-	var pdv = ctx.Int(parseDependencyLevelFlag)
-	if pdv == 0 {
-		if ctx.Bool(parseDependencyFlag) {
-			pdv = 1
-		}
-	}
 	return gen.New().Build(&gen.Config{
 		SearchDir:           ctx.String(searchDirFlag),
 		Excludes:            ctx.String(excludeFlag),
@@ -225,7 +213,7 @@ func initAction(ctx *cli.Context) error {
 		OutputDir:           ctx.String(outputFlag),
 		OutputTypes:         outputTypes,
 		ParseVendor:         ctx.Bool(parseVendorFlag),
-		ParseDependency:     pdv,
+		ParseDependency:     ctx.Bool(parseDependencyFlag),
 		MarkdownFilesDir:    ctx.String(markdownFilesFlag),
 		ParseInternal:       ctx.Bool(parseInternalFlag),
 		GeneratedTime:       ctx.Bool(generatedTimeFlag),
@@ -240,12 +228,13 @@ func initAction(ctx *cli.Context) error {
 		RightTemplateDelim:  rightDelim,
 		PackageName:         ctx.String(packageName),
 		Debugger:            logger,
+		GenerateOpenAPI3Doc: ctx.Bool(openAPIVersionFlag),
 		CollectionFormat:    collectionFormat,
-		PackagePrefix:       ctx.String(packagePrefixFlag),
 	})
 }
 
 func main() {
+	fmt.Println("Swag version: ", swag.Version)
 	app := cli.NewApp()
 	app.Version = swag.Version
 	app.Usage = "Automatically generate RESTful API documentation with Swagger 2.0 for Go."

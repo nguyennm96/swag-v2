@@ -14,10 +14,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-openapi/spec"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/swaggo/swag"
 )
 
 const searchDir = "../testdata/simple"
@@ -224,8 +222,7 @@ func TestGen_BuildDescriptionWithQuotes(t *testing.T) {
 			require.NoError(t, err)
 		}
 	}
-
-	cmd := exec.Command("go", "build", "-buildmode=plugin", "github.com/swaggo/swag/testdata/quotes")
+	cmd := exec.Command("go", "build", "-buildmode=plugin", "github.com/nguyennm96/swag-v2/v2/testdata/quotes")
 
 	cmd.Dir = config.SearchDir
 
@@ -286,7 +283,7 @@ func TestGen_BuildDocCustomDelims(t *testing.T) {
 		}
 	}
 
-	cmd := exec.Command("go", "build", "-buildmode=plugin", "github.com/swaggo/swag/testdata/delims")
+	cmd := exec.Command("go", "build", "-buildmode=plugin", "github.com/nguyennm96/swag-v2/v2/testdata/delims")
 
 	cmd.Dir = config.SearchDir
 
@@ -578,46 +575,6 @@ func (w *mockWriter) Write(data []byte) (int, error) {
 	return len(data), nil
 }
 
-func TestGen_writeGoDoc(t *testing.T) {
-	gen := New()
-
-	swapTemplate := packageTemplate
-
-	packageTemplate = `{{{`
-	err := gen.writeGoDoc("docs", nil, nil, &Config{})
-	assert.Error(t, err)
-
-	packageTemplate = `{{.Data}}`
-	swagger := &spec.Swagger{
-		VendorExtensible: spec.VendorExtensible{},
-		SwaggerProps: spec.SwaggerProps{
-			Info: &spec.Info{},
-		},
-	}
-
-	err = gen.writeGoDoc("docs", &mockWriter{}, swagger, &Config{})
-	assert.Error(t, err)
-
-	packageTemplate = `{{ if .GeneratedTime }}Fake Time{{ end }}`
-	err = gen.writeGoDoc("docs",
-		&mockWriter{
-			hook: func(data []byte) {
-				assert.Equal(t, "Fake Time", string(data))
-			},
-		}, swagger, &Config{GeneratedTime: true})
-	assert.NoError(t, err)
-
-	err = gen.writeGoDoc("docs",
-		&mockWriter{
-			hook: func(data []byte) {
-				assert.Equal(t, "", string(data))
-			},
-		}, swagger, &Config{GeneratedTime: false})
-	assert.NoError(t, err)
-
-	packageTemplate = swapTemplate
-}
-
 func TestGen_GeneratedDoc(t *testing.T) {
 	config := &Config{
 		SearchDir:          searchDir,
@@ -661,7 +618,7 @@ func TestGen_cgoImports(t *testing.T) {
 		OutputDir:          "../testdata/simple_cgo/docs",
 		OutputTypes:        outputTypes,
 		PropNamingStrategy: "",
-		ParseDependency:    1,
+		ParseDependency:    true,
 	}
 
 	assert.NoError(t, New().Build(config))

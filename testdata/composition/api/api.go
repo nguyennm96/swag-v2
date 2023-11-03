@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/swaggo/swag/testdata/composition/common"
+	"github.com/nguyennm96/swag-v2/v2/testdata/composition/common"
 )
 
 type Foo struct {
