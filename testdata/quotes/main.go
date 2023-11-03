@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/nguyennm96/swag-v2/v2/testdata/quotes/api"
-	_ "github.com/nguyennm96/swag-v2/v2/testdata/quotes/docs"
+	"github.com/nguyennm96/swag-v2/testdata/quotes/api"
+	_ "github.com/nguyennm96/swag-v2/testdata/quotes/docs"
 )
 
 func ReadDoc() string {

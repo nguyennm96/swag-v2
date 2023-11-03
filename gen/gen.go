@@ -6,6 +6,7 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
+	"github.com/nguyennm96/swag-v2"
 	"go/format"
 	"io"
 	"log"
@@ -21,7 +22,6 @@ import (
 	v2 "github.com/go-openapi/spec"
 	v3 "github.com/sv-tools/openapi/spec"
 
-	"github.com/nguyennm96/swag-v2/v2"
 	"sigs.k8s.io/yaml"
 )
 
